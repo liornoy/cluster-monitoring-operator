@@ -144,6 +144,15 @@ spec:
       for: 1h
       labels:
         severity: warning
+    - alert: NodeNetworkReceiveDrops
+      annotations:
+        description: '{{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf "%.0f" $value }} receive drops in the last two minutes.'
+        summary: Network interface is reporting many receive drops.
+      expr: |
+        rate(node_network_receive_drop_total{job="node-exporter"}[2m]) / rate(node_network_receive_packets_total{job="node-exporter"}[2m]) > 0.01
+      for: 1h
+      labels:
+        severity: critical
     - alert: NodeNetworkTransmitErrs
       annotations:
         description: '{{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf "%.0f" $value }} transmit errors in the last two minutes.'
@@ -153,6 +162,15 @@ spec:
       for: 1h
       labels:
         severity: warning
+    - alert: NodeNetworkTransmitDrops
+      annotations:
+        description: '{{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf "%.0f" $value }} transmit drops in the last two minutes.'
+        summary: Network interface is reporting many transmit drops.
+      expr: |
+        rate(node_network_transmit_drop_total{job="node-exporter"}[2m]) / rate(node_network_transmit_packets_total{job="node-exporter"}[2m]) > 0.01
+      for: 1h
+      labels:
+        severity: critical
     - alert: NodeHighNumberConntrackEntriesUsed
       annotations:
         description: '{{ $value | humanizePercentage }} of conntrack entries are used.'
